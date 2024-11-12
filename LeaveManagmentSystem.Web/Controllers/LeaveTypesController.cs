@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LeaveManagmentSystem.Web.Data;
+﻿using LeaveManagmentSystem.Web.Common;
 using LeaveManagmentSystem.Web.Models.LeaveTypes;
-using AutoMapper;
 using LeaveManagmentSystem.Web.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagmentSystem.Web.Controllers
 {
+    [Authorize(Roles = Roles.Administrator)]
     public class LeaveTypesController(ILeaveTypesService _leaveTypesService) : Controller
     {
-      
+
         private const string NameExistsValidationMessage = "This leave type already exists in database";
-       
+
 
 
 
@@ -49,8 +43,8 @@ namespace LeaveManagmentSystem.Web.Controllers
         {
             return View();
         }
-        
-       
+
+
         // POST: LeaveTypes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -64,14 +58,14 @@ namespace LeaveManagmentSystem.Web.Controllers
                 ModelState.AddModelError(nameof(leaveTypeCreate.Name), NameExistsValidationMessage);
             }
 
-            if (leaveTypeCreate.Name.Contains("vacation")) 
+            if (leaveTypeCreate.Name.Contains("vacation"))
             {
                 ModelState.AddModelError(nameof(leaveTypeCreate.Name), "Name should not contain vacation");
             }
             if (ModelState.IsValid)
             {
-                
-               await _leaveTypesService.Create(leaveTypeCreate);
+
+                await _leaveTypesService.Create(leaveTypeCreate);
                 return RedirectToAction(nameof(Index));
             }
             return View(leaveTypeCreate);
@@ -91,7 +85,7 @@ namespace LeaveManagmentSystem.Web.Controllers
                 return NotFound();
             }
             return View(leaveType);
-         
+
         }
 
         // POST: LeaveTypes/Edit/5
@@ -111,7 +105,7 @@ namespace LeaveManagmentSystem.Web.Controllers
             {
                 ModelState.AddModelError(nameof(leaveTypeEdit.Name), NameExistsValidationMessage);
             }
-             
+
 
             if (ModelState.IsValid)
             {
@@ -150,7 +144,7 @@ namespace LeaveManagmentSystem.Web.Controllers
                 return NotFound();
             }
             return View(leaveType);
-        
+
         }
 
         // POST: LeaveTypes/Delete/5
@@ -162,7 +156,7 @@ namespace LeaveManagmentSystem.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-   
+
 
     }
 }
